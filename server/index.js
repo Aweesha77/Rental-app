@@ -9,6 +9,7 @@ app.use(express.json()); // to parse the body of the request message
 app.use(express.static("public"));   // to serve static files
 
 // auth import and use
+
 const authRoutes=require("./routes/auth.js")
 app.use("/auth",authRoutes);
 
@@ -17,6 +18,7 @@ app.use("/auth",authRoutes);
 const PORT=3001;
 
 mongoose.connect(process.env.MONGO_URL)
+dbName='Hotel_rental'
     .then(() => {
         app.listen(PORT, () => {
             console.log("Server is running on port", PORT);

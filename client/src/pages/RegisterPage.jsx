@@ -1,4 +1,5 @@
 import React,{useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import '../styles/Register.scss'
 
 const RegisterPage = () => {
@@ -25,10 +26,43 @@ const RegisterPage = () => {
     console.log(formData);
 
 
+    const [passwordMatch, setPasswordMatch] = useState(true);   //checking password and confirm password is matching
+
+
+    useEffect(() => {
+        setPasswordMatch(formData.password === formData.confirmPassword || formData.confirmPassword === "")
+    })
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        
+
+        try {
+            const register_form = new FormData()   //creating a new form data object
+      
+            for (var key in formData) {
+              register_form.append(key, formData[key])  //key is the name of the input field and formData[key] is the value of the input field
+            }
+      
+            const response = await fetch("http://localhost:3001/auth/register", {   //fetching the register route from the backend
+              method: "POST",
+              body: register_form  //the backend get register form's body data
+            })
+      
+            if (response.ok) {
+              navigate("/login")
+            }
+          } catch (err) {
+            console.log("Registration failed", err.message)
+          }
+    }
+
   return (
     <div className='register'>
         <div className="register_content">
-            <form className='register_content_form'>
+            <form className='register_content_form ' onSubmit={handleSubmit}>
                 <input placeholder='First Name' name='firstName' value={formData.firstName} onChange={handleChange} required/>
                
                 <input placeholder='Last Name' name='lastName' value={formData.lastName} onChange={handleChange} required/>
@@ -39,6 +73,8 @@ const RegisterPage = () => {
                
                 <input placeholder='Confirm Password' name='confirmPassword' type='password' value={formData.confirmPassword} onChange={handleChange} required/>
                
+                {!passwordMatch && <p style={{color:"red"}}>Password and Confirm Password do not match</p>}
+
                 <input type='file' id='image' name='profileImage' accept='image/*' style={{display:"none"}} onChange={handleChange} required/>
 
                 <label htmlFor='image'>
@@ -50,7 +86,7 @@ const RegisterPage = () => {
                     <img src={URL.createObjectURL(formData.profileImage)} alt='profile photo' style={{maxWidth:"100px"}}/>
                 )}
 
-                <button type='submit'>REGISTER</button>
+                <button type='submit' disabled={!passwordMatch}>REGISTER</button>
             </form>
 
             <a href='/login'>Already have an account? Log in here</a>
