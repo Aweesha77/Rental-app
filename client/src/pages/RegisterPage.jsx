@@ -18,7 +18,7 @@ const RegisterPage = () => {
         setFormData({         //setting the state
             ...formData,       //spread operator to copy the previous state.that means if i update email it store name values in the memory
             [name]:value,       //setting the value of the input field to the state
-            [name]:name === 'profileImage' ? files[0] : value    //if the input field is profileImage then set the value to the file else set the value to the value of the input field
+            [name]:name === 'profileImage' ? files[0] : value    //??? if the input field is profileImage then set the value to the file else set the value to the value of the input field
         })
     }
 
@@ -45,6 +45,10 @@ const RegisterPage = () => {
                     <img src='/assets/addImage.png' alt='add profile image'/>
                     <p>Upload Your Photo</p>
                 </label>
+
+                {formData.profileImage && (
+                    <img src={URL.createObjectURL(formData.profileImage)} alt='profile photo' style={{maxWidth:"100px"}}/>
+                )}
 
                 <button type='submit'>REGISTER</button>
             </form>
