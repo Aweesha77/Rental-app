@@ -5,14 +5,22 @@ const multer = require("multer");
 
 const User = require("../models/user");
 
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'public/uploads/');   //upload images to upoads folder
+    },
+    filename:(req,file,cb)=>{
+        cb(null,file.originalname);  //use the original file name
+    }
+});
 
-
+const upload=multer({storage});
 
 
 
 // user registeration
 
-router.post("/register", async (req, res) => {
+router.post("/register", upload.single('profileImage'),async (req, res) => {
     try {
 
         //take all the information from user and validate it
