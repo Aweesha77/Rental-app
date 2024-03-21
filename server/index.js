@@ -4,24 +4,30 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
 
-app.use(cors()); // to enable CORS
-app.use(express.json()); // to parse the body of the request message
-app.use(express.static("public"));   // to serve static files
+const authRoutes = require("./routes/auth.js")
+const listingRoutes = require("./routes/listing.js")
+const bookingRoutes = require("./routes/booking.js")
+const userRoutes = require("./routes/user.js")
 
-// auth import and use
+app.use(cors());
+app.use(express.json());
+app.use(express.static("public"));
 
-const authRoutes=require("./routes/auth.js")
-app.use("/auth",authRoutes);
+/* ROUTES */
+app.use("/auth", authRoutes)    //localhost:3001/auth/register
+app.use("/properties", listingRoutes)  //localhost:3001/properties
+app.use("/bookings", bookingRoutes)
+app.use("/users", userRoutes)
+
+/* MONGOOSE SETUP */
+const PORT = 3001;
+mongoose
+  .connect(process.env.MONGO_URL, {
+    dbName: "Dream_Nest",
+  })
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+  })
+  .catch((err) => console.log(`${err} did not connect`));
 
 
-// mongoose setup
-const PORT=3001;
-
-mongoose.connect(process.env.MONGO_URL)
-dbName='Hotel_rental'
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log("Server is running on port", PORT);
-        });
-    })
-    .catch((err) => console.log(`${err} did not connected`));
