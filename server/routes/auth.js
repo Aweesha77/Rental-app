@@ -1,14 +1,14 @@
-const router = require("express").Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const multer = require("multer");
+const router = require("express").Router(); // Import express and create a router-to 
+const bcrypt = require("bcryptjs");   // Import bcrypt to hash the password
+const jwt = require("jsonwebtoken");  //jsonwebtoken library, which is used for generating JSON Web Tokens (JWT) for user authentication.
+const multer = require("multer");  //multer library, which is middleware for handling multipart/form-data, primarily used for file uploads.
 
-const User = require("../models/User");
+const User = require("../models/User");  //mports the User model defined in a separate file
 
 /* Configuration Multer for File Upload */
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads/"); // Store uploaded files in the 'uploads' folder
+    cb(null, "public/uploads/"); // Store uploaded files in the 'uploads' folder       Multer is configured to specify how uploaded files should be stored. Two functions are defined for destination and filename. Uploaded files will be stored in the 'public/uploads/' directory with their original filenames.
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Use the original file name
@@ -21,7 +21,7 @@ const upload = multer({ storage });
 router.post("/register", upload.single("profileImage"), async (req, res) => {
   try {
     /* Take all information from the form */
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body; //The user's first name, last name, email, and password are extracted from the request body.
 
     /* The uploaded file is available as req.file */
     const profileImage = req.file;
@@ -34,7 +34,7 @@ router.post("/register", upload.single("profileImage"), async (req, res) => {
     const profileImagePath = profileImage.path;
 
     /* Check if user exists */
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email });   //The findOne() method is used to find a single document in the database that matches the specified query criteria. In this case, the query is based on the user's email address.
     if (existingUser) {
       return res.status(409).json({ message: "User already exists!" });
     }

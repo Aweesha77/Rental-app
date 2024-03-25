@@ -1,8 +1,8 @@
 const express = require("express");
-const app = express();
-const mongoose = require("mongoose");
-const dotenv = require("dotenv").config();
-const cors = require("cors");
+const app = express();                 //create an express app
+const mongoose = require("mongoose");  //to connect to mongoDB
+const dotenv = require("dotenv").config();  //to hide the mongo url
+const cors = require("cors");            //to allow cross-origin requests
 
 const authRoutes = require("./routes/auth.js")
 const listingRoutes = require("./routes/listing.js")
@@ -10,7 +10,7 @@ const bookingRoutes = require("./routes/booking.js")
 const userRoutes = require("./routes/user.js")
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json());   //middleware
 app.use(express.static("public"));
 
 /* ROUTES */
